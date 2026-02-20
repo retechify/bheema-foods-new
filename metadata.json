@@ -1,0 +1,7 @@
+{
+  "name": "Bheema Foods",
+  "description": "Traditional functional nutrition for the modern family. Sprouted, small-batch, functional mixes rooted in Indian nutrition.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
