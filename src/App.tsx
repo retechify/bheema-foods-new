@@ -4,6 +4,9 @@ import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { ProductDetail } from './pages/ProductDetail';
+import { CartDrawer } from './components/CartDrawer';
+import { PRODUCTS, BUNDLES } from './constants';
+import { CartItem } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 
 type Page = 'home' | 'shop' | 'product';
@@ -11,7 +14,12 @@ type Page = 'home' | 'shop' | 'product';
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [pageParams, setPageParams] = useState<any>({});
-  const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   // Scroll to top on page change
   useEffect(() => {
@@ -24,9 +32,44 @@ export default function App() {
   };
 
   const handleAddToCart = (id: string, quantity: number = 1) => {
-    setCartCount(prev => prev + quantity);
-    // In a real app, we would manage a cart array here
+    const product = PRODUCTS.find(p => p.id === id);
+    const bundle = BUNDLES.find(b => b.id === id);
+    
+    if (!product && !bundle) return;
+
+    const itemToAdd = product 
+      ? { id: product.id, name: product.name, price: product.price, image: product.image, weight: product.weight }
+      : { id: bundle!.id, name: bundle!.name, price: bundle!.price, image: bundle!.image, weight: 'Bundle' };
+
+    setCartItems(prev => {
+      const existing = prev.find(item => item.id === id);
+      if (existing) {
+        return prev.map(item => item.id === id ? { ...item, quantity: item.quantity + quantity } : item);
+      }
+      return [...prev, { ...itemToAdd, quantity }];
+    });
+
+    setToastMessage(`Added to cart!`);
+    setShowToast(true);
+    setIsCartOpen(true);
+    setTimeout(() => setShowToast(false), 3000);
+    
     console.log(`Added ${quantity} of product ${id} to cart`);
+  };
+
+  const handleUpdateQuantity = (id: string, delta: number) => {
+    setCartItems(prev => prev.map(item => 
+      item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
+    ));
+  };
+
+  const handleRemoveItem = (id: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleCheckout = () => {
+    alert('Checkout functionality coming soon!');
+    setIsCartOpen(false);
   };
 
   const renderPage = () => {
@@ -44,7 +87,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar onNavigate={navigate} cartCount={cartCount} />
+      <Navbar onNavigate={navigate} cartCount={cartCount} onOpenCart={() => setIsCartOpen(true)} />
       
       <main className="flex-grow">
         <AnimatePresence mode="wait">
@@ -60,7 +103,35 @@ export default function App() {
         </AnimatePresence>
       </main>
 
+      <CartDrawer 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        items={cartItems}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+        onCheckout={handleCheckout}
+      />
+
       <Footer onNavigate={navigate} />
+
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: 20, x: '-50%' }}
+            className="fixed bottom-10 left-1/2 z-[100] bg-brand-green-dark text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 border border-brand-green"
+          >
+            <div className="bg-brand-accent rounded-full p-1">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <span className="font-bold tracking-wide">{toastMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* WhatsApp Floating Button */}
       <a 

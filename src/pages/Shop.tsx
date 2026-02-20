@@ -31,49 +31,47 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
   }, [selectedCategory, selectedBenefit, searchQuery]);
 
   return (
-    <div className="pt-32 pb-24 bg-brand-beige min-h-screen">
+    <div className="pt-32 pb-24 bg-white min-h-screen">
       <div className="container-custom">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-serif text-brand-green-dark mb-4">Shop All Products</h1>
-          <p className="text-brand-green-light">Traditional nutrition, delivered fresh to your doorstep.</p>
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-serif text-brand-green-dark mb-4">Entire Collection</h1>
+          <div className="flex items-center justify-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            <button onClick={() => onNavigate('home')} className="hover:text-brand-green">Home</button>
+            <span>/</span>
+            <span className="text-brand-green-dark">Entire Collection | Bheema Foods</span>
+          </div>
         </div>
 
         {/* Filters & Search Bar */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-12">
+        <div className="flex flex-col lg:flex-row gap-4 mb-12">
           <div className="relative flex-grow">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-green-light" size={20} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input 
               type="text" 
-              placeholder="Search for products, benefits, or ingredients..." 
-              className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border border-brand-beige-dark focus:outline-none focus:ring-2 focus:ring-brand-green/20 shadow-sm"
+              placeholder="Search products..." 
+              className="w-full pl-12 pr-4 py-3 bg-white rounded-md border border-gray-200 focus:outline-none focus:border-brand-green text-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <button 
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="flex items-center space-x-2 bg-white px-6 py-4 rounded-2xl border border-brand-beige-dark font-bold text-brand-green-dark hover:bg-brand-beige transition-colors shadow-sm"
+              className="flex items-center space-x-2 bg-white px-6 py-3 rounded-md border border-gray-200 font-bold text-[11px] uppercase tracking-widest text-brand-green-dark hover:bg-gray-50 transition-colors"
             >
-              <Filter size={20} />
-              <span>Filters</span>
-              { (selectedCategory !== 'all' || selectedBenefit !== 'all') && (
-                <span className="bg-brand-green text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">
-                  {(selectedCategory !== 'all' ? 1 : 0) + (selectedBenefit !== 'all' ? 1 : 0)}
-                </span>
-              )}
+              <Filter size={16} />
+              <span>Filter</span>
             </button>
             
-            <div className="relative group">
-              <select className="appearance-none bg-white px-8 py-4 pr-12 rounded-2xl border border-brand-beige-dark font-bold text-brand-green-dark focus:outline-none shadow-sm cursor-pointer">
-                <option>Sort by: Featured</option>
+            <div className="relative">
+              <select className="appearance-none bg-white px-6 py-3 pr-10 rounded-md border border-gray-200 font-bold text-[11px] uppercase tracking-widest text-brand-green-dark focus:outline-none cursor-pointer">
+                <option>Featured</option>
                 <option>Price: Low to High</option>
                 <option>Price: High to Low</option>
-                <option>Newest First</option>
               </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-green-light pointer-events-none" size={20} />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
             </div>
           </div>
         </div>
@@ -87,13 +85,13 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden mb-12"
             >
-              <div className="bg-white p-8 rounded-3xl border border-brand-beige-dark shadow-inner grid md:grid-cols-2 gap-12">
+              <div className="bg-white p-6 rounded-md border border-gray-200 grid md:grid-cols-2 gap-8">
                 <div>
-                  <h4 className="text-sm font-bold uppercase tracking-widest text-brand-green-light mb-6">By Category</h4>
-                  <div className="flex flex-wrap gap-3">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">By Category</h4>
+                  <div className="flex flex-wrap gap-2">
                     <button 
                       onClick={() => setSelectedCategory('all')}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedCategory === 'all' ? 'bg-brand-green text-white' : 'bg-brand-beige text-brand-green-dark hover:bg-brand-beige-dark'}`}
+                      className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${selectedCategory === 'all' ? 'bg-brand-green-dark text-white' : 'bg-gray-50 text-brand-green-dark hover:bg-gray-100'}`}
                     >
                       All Categories
                     </button>
@@ -101,7 +99,7 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
                       <button 
                         key={cat.id}
                         onClick={() => setSelectedCategory(cat.id)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedCategory === cat.id ? 'bg-brand-green text-white' : 'bg-brand-beige text-brand-green-dark hover:bg-brand-beige-dark'}`}
+                        className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${selectedCategory === cat.id ? 'bg-brand-green-dark text-white' : 'bg-gray-50 text-brand-green-dark hover:bg-gray-100'}`}
                       >
                         {cat.name}
                       </button>
@@ -110,11 +108,11 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
                 </div>
                 
                 <div>
-                  <h4 className="text-sm font-bold uppercase tracking-widest text-brand-green-light mb-6">By Health Benefit</h4>
-                  <div className="flex flex-wrap gap-3">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">By Health Benefit</h4>
+                  <div className="flex flex-wrap gap-2">
                     <button 
                       onClick={() => setSelectedBenefit('all')}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedBenefit === 'all' ? 'bg-brand-green text-white' : 'bg-brand-beige text-brand-green-dark hover:bg-brand-beige-dark'}`}
+                      className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${selectedBenefit === 'all' ? 'bg-brand-green-dark text-white' : 'bg-gray-50 text-brand-green-dark hover:bg-gray-100'}`}
                     >
                       All Benefits
                     </button>
@@ -122,25 +120,12 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
                       <button 
                         key={benefit}
                         onClick={() => setSelectedBenefit(benefit)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedBenefit === benefit ? 'bg-brand-green text-white' : 'bg-brand-beige text-brand-green-dark hover:bg-brand-beige-dark'}`}
+                        className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${selectedBenefit === benefit ? 'bg-brand-green-dark text-white' : 'bg-gray-50 text-brand-green-dark hover:bg-gray-100'}`}
                       >
                         {benefit}
                       </button>
                     ))}
                   </div>
-                </div>
-                
-                <div className="md:col-span-2 flex justify-end pt-6 border-t border-brand-beige">
-                  <button 
-                    onClick={() => {
-                      setSelectedCategory('all');
-                      setSelectedBenefit('all');
-                    }}
-                    className="text-brand-green-light hover:text-brand-accent text-sm font-bold uppercase tracking-widest flex items-center space-x-2"
-                  >
-                    <X size={16} />
-                    <span>Clear All Filters</span>
-                  </button>
                 </div>
               </div>
             </motion.div>
@@ -149,7 +134,7 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
 
         {/* Product Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {filteredProducts.map((product) => (
               <ProductCard 
                 key={product.id} 
@@ -160,19 +145,19 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
             ))}
           </div>
         ) : (
-          <div className="text-center py-24 bg-white rounded-3xl border border-brand-beige-dark">
-            <div className="w-20 h-20 bg-brand-beige rounded-full flex items-center justify-center mx-auto mb-6 text-brand-green-light">
-              <Search size={40} />
+          <div className="text-center py-24 bg-gray-50 rounded-lg border border-gray-100">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300 shadow-sm">
+              <Search size={32} />
             </div>
-            <h3 className="text-2xl font-serif text-brand-green-dark mb-2">No products found</h3>
-            <p className="text-brand-green-light mb-8">Try adjusting your filters or search query.</p>
+            <h3 className="text-xl font-serif text-brand-green-dark mb-2">No products found</h3>
+            <p className="text-sm text-gray-400 mb-8">Try adjusting your filters or search query.</p>
             <button 
               onClick={() => {
                 setSelectedCategory('all');
                 setSelectedBenefit('all');
                 setSearchQuery('');
               }}
-              className="btn-primary"
+              className="bg-brand-green-dark text-white px-8 py-3 rounded-md text-[11px] font-bold uppercase tracking-widest"
             >
               Reset All Filters
             </button>

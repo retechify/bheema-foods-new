@@ -46,3 +46,12 @@ export interface FAQItem {
   question: string;
   answer: string;
 }
+
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  weight: string;
+  quantity: number;
+}

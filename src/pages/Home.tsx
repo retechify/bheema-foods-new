@@ -17,76 +17,77 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onAddToCart }) => {
   return (
     <div className="pt-20">
       {/* Section 1: Hero */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-brand-beige">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://picsum.photos/seed/hero/1920/1080?blur=2" 
-            alt="Hero Background" 
-            className="w-full h-full object-cover opacity-20"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-beige via-brand-beige/80 to-transparent" />
-        </div>
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#F9F9F7]">
+        {/* Background decorative shapes */}
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#E8E8E1]/40 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-[#E8E8E1]/30 rounded-full blur-3xl -z-10" />
         
-        <div className="container-custom relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+        <div className="container-custom relative z-10 grid lg:grid-cols-2 gap-12 items-center pt-12">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <div className="inline-flex items-center space-x-2 bg-brand-green/10 text-brand-green px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-              <Star size={14} fill="currentColor" />
+            <div className="inline-flex items-center space-x-2 bg-[#E8E8E1] text-[#3D5A35] px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-8">
+              <Star size={12} fill="currentColor" />
               <span>Trusted by 10,000+ Families</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-serif text-brand-green-dark leading-[1.1] mb-6">
-              Traditional Nutrition for the <span className="italic text-brand-green">Modern Family</span>
+            <h1 className="text-5xl md:text-7xl font-serif text-[#1A1A1A] leading-[1.1] mb-8">
+              Traditional Nutrition for the <span className="italic font-normal text-[#3D5A35]">Modern Family</span>
             </h1>
-            <p className="text-lg text-brand-green-dark/80 mb-8 max-w-lg leading-relaxed">
+            <p className="text-base text-gray-500 mb-10 max-w-lg leading-relaxed font-medium">
               Sprouted, small-batch, functional mixes rooted in ancient Indian wisdom. Crafted for kids, adults, and elders.
             </p>
             
-            <div className="flex flex-wrap gap-4 mb-10">
-              <button onClick={() => onNavigate('shop')} className="btn-primary flex items-center space-x-2">
+            <div className="flex flex-wrap gap-4 mb-16">
+              <button 
+                onClick={() => onNavigate('shop')} 
+                className="bg-[#3D5A35] hover:bg-[#2D4327] text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs flex items-center space-x-3 transition-all shadow-lg shadow-brand-green/20"
+              >
                 <span>Shop Now</span>
-                <ArrowRight size={18} />
+                <ArrowRight size={16} />
               </button>
-              <button onClick={() => onNavigate('shop')} className="btn-secondary">
+              <button 
+                onClick={() => onNavigate('shop')} 
+                className="bg-transparent border border-gray-300 hover:border-[#3D5A35] text-[#1A1A1A] px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-all"
+              >
                 Explore Categories
               </button>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <div className="flex flex-wrap gap-x-8 gap-y-4">
               {[
-                { text: 'FSSAI Certified', icon: <CheckCircle2 size={16} /> },
-                { text: 'No Preservatives', icon: <CheckCircle2 size={16} /> },
-                { text: 'Sprouted 48 Hours', icon: <CheckCircle2 size={16} /> },
-                { text: 'Fresh Weekly', icon: <CheckCircle2 size={16} /> },
+                { text: 'FSSAI Certified' },
+                { text: 'No Preservatives' },
+                { text: 'Sprouted 48 Hours' },
+                { text: 'Fresh Weekly' },
               ].map((item, i) => (
-                <div key={i} className="flex items-center space-x-2 text-brand-green-dark/70">
-                  <span className="text-brand-green">{item.icon}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider">{item.text}</span>
+                <div key={i} className="flex items-center space-x-2 text-gray-400">
+                  <div className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center">
+                    <CheckCircle2 size={10} className="text-gray-400" />
+                  </div>
+                  <span className="text-[9px] font-bold uppercase tracking-widest">{item.text}</span>
                 </div>
               ))}
             </div>
           </motion.div>
           
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative hidden lg:block"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+            className="relative"
           >
-            <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-8 border-white">
+            <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl border-[12px] border-white aspect-[4/5]">
               <img 
-                src="https://picsum.photos/seed/product-hero/800/1000" 
-                alt="Product Packaging" 
-                className="w-full h-auto"
+                src="https://images.unsplash.com/photo-1517733948473-989200c6d9a1?auto=format&fit=crop&q=80&w=800&h=1000" 
+                alt="Traditional Shop" 
+                className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
             </div>
-            {/* Decorative elements */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-brand-accent/20 rounded-full blur-3xl" />
-            <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-brand-green/10 rounded-full blur-3xl" />
+            {/* Background circle accent */}
+            <div className="absolute -top-12 -right-12 w-64 h-64 bg-[#E8E8E1] rounded-full -z-10 opacity-50" />
           </motion.div>
         </div>
       </section>
@@ -242,7 +243,12 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onAddToCart }) => {
                     <span className="text-3xl font-bold text-brand-green-dark">₹{bundle.price}</span>
                     <span className="text-lg text-brand-green-light line-through">₹{bundle.originalPrice}</span>
                   </div>
-                  <button className="btn-primary w-full">Shop Bundle</button>
+                  <button 
+                    onClick={() => onAddToCart(bundle.id)}
+                    className="btn-primary w-full"
+                  >
+                    Shop Bundle
+                  </button>
                 </div>
               </div>
             ))}

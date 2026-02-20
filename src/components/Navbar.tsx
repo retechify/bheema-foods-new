@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'motion/react';
 interface NavbarProps {
   onNavigate: (page: string, params?: any) => void;
   cartCount: number;
+  onOpenCart: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onNavigate, cartCount }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onNavigate, cartCount, onOpenCart }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -19,38 +20,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, cartCount }) => {
 
   const navLinks = [
     { name: 'Home', action: () => onNavigate('home') },
-    { name: 'Shop All', action: () => onNavigate('shop') },
-    { name: 'Categories', action: () => onNavigate('shop') },
+    { name: 'All Products', action: () => onNavigate('shop') },
+    { name: 'Crazy Deals', action: () => onNavigate('shop') },
     { name: 'Our Story', action: () => onNavigate('home') },
+    { name: 'Blog', action: () => onNavigate('home') },
+    { name: 'Contact', action: () => onNavigate('home') },
+    { name: 'Track Order', action: () => onNavigate('home') },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-sm py-2' : 'bg-white py-4 border-b border-gray-100'}`}>
       <div className="container-custom flex items-center justify-between">
-        {/* Mobile Menu Toggle */}
-        <button 
-          className="lg:hidden p-2 text-brand-green-dark"
-          onClick={() => setIsMobileMenuOpen(true)}
-        >
-          <Menu size={24} />
-        </button>
-
         {/* Logo */}
         <div 
-          className="cursor-pointer flex flex-col items-center"
+          className="cursor-pointer flex items-center"
           onClick={() => onNavigate('home')}
         >
-          <span className="text-2xl font-serif font-bold tracking-tight text-brand-green-dark">BHEEMA FOODS</span>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-brand-green font-medium -mt-1">Traditional Nutrition</span>
+          <span className="text-2xl font-serif font-bold tracking-tight text-[#3D5A35]">Bheema Foods</span>
         </div>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center space-x-8">
+        <div className="hidden xl:flex items-center space-x-6">
           {navLinks.map((link) => (
             <button
               key={link.name}
               onClick={link.action}
-              className="text-sm font-medium text-brand-green-dark hover:text-brand-green transition-colors"
+              className="text-[11px] font-bold text-gray-600 hover:text-brand-green transition-colors uppercase tracking-wider"
             >
               {link.name}
             </button>
@@ -58,23 +53,30 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, cartCount }) => {
         </div>
 
         {/* Icons */}
-        <div className="flex items-center space-x-4">
-          <button className="p-2 text-brand-green-dark hover:text-brand-green transition-colors hidden sm:block">
-            <Search size={20} />
+        <div className="flex items-center space-x-3">
+          <button className="p-2 text-gray-600 hover:text-brand-green transition-colors">
+            <Search size={18} />
           </button>
-          <button className="p-2 text-brand-green-dark hover:text-brand-green transition-colors hidden sm:block">
-            <User size={20} />
+          <button className="p-2 text-gray-600 hover:text-brand-green transition-colors hidden sm:block">
+            <User size={18} />
           </button>
           <button 
-            className="p-2 text-brand-green-dark hover:text-brand-green transition-colors relative"
-            onClick={() => onNavigate('shop')}
+            className="p-2 text-gray-600 hover:text-brand-green transition-colors relative"
+            onClick={onOpenCart}
           >
-            <ShoppingBag size={20} />
+            <ShoppingBag size={18} />
             {cartCount > 0 && (
-              <span className="absolute top-0 right-0 bg-brand-accent text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute top-1 right-1 bg-brand-accent text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}
+          </button>
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="xl:hidden p-2 text-gray-600"
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <Menu size={20} />
           </button>
         </div>
       </div>
