@@ -187,27 +187,47 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onAddToCart }) => {
       </section>
 
       {/* Section 5: Social Gallery */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white overflow-hidden">
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-serif text-brand-green-dark mb-4">Join Our Community</h2>
-            <p className="text-brand-green-light">Follow us @bheemafoods for daily inspiration and traditional wisdom.</p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <h2 className="text-4xl font-serif text-brand-green-dark mb-4">Join Our Community</h2>
+              <p className="text-brand-green-light">Follow us @bheemafoods for daily inspiration and traditional wisdom.</p>
+            </div>
+            <a 
+              href="https://instagram.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-brand-beige text-brand-green-dark px-6 py-3 rounded-full font-bold uppercase tracking-widest text-[10px] flex items-center space-x-2 hover:bg-brand-accent hover:text-white transition-all"
+            >
+              <Instagram size={14} />
+              <span>Follow on Instagram</span>
+            </a>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {[
+              { id: 1, caption: "Morning rituals with Sprouted Ragi" },
+              { id: 2, caption: "Small batches, big nutrition" },
+              { id: 3, caption: "Traditional stone grinding process" },
+              { id: 4, caption: "Happy kids, healthy families" },
+              { id: 5, caption: "36 ingredients of pure strength" },
+              { id: 6, caption: "Freshly ground every week" },
+            ].map((item) => (
               <motion.div 
-                key={i}
-                whileHover={{ scale: 1.02 }}
-                className="aspect-square rounded-2xl overflow-hidden bg-brand-beige relative group cursor-pointer"
+                key={item.id}
+                whileHover={{ y: -5 }}
+                className="aspect-square rounded-2xl overflow-hidden bg-brand-beige relative group cursor-pointer shadow-sm"
               >
                 <img 
-                  src={`https://picsum.photos/seed/social${i}/600/600`} 
-                  alt={`Social ${i}`} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  src={`https://picsum.photos/seed/social${item.id}/600/600`} 
+                  alt={`Social ${item.id}`} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-brand-green-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Instagram className="text-white" size={24} />
+                <div className="absolute inset-0 bg-brand-green-dark/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
+                  <Instagram className="text-white mb-2" size={20} />
+                  <p className="text-white text-[10px] font-medium leading-tight">{item.caption}</p>
                 </div>
               </motion.div>
             ))}
@@ -326,7 +346,10 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onAddToCart }) => {
               <h2 className="text-4xl font-serif text-brand-green-dark mb-4">Traditional Wisdom</h2>
               <p className="text-brand-green-light">Insights into ancient nutrition and modern wellness.</p>
             </div>
-            <button className="text-brand-green font-bold uppercase tracking-widest flex items-center space-x-2 hover:text-brand-green-dark transition-colors">
+            <button 
+              onClick={() => onNavigate('blog')}
+              className="text-brand-green font-bold uppercase tracking-widest flex items-center space-x-2 hover:text-brand-green-dark transition-colors"
+            >
               <span>Read All Articles</span>
               <ArrowRight size={18} />
             </button>
@@ -335,16 +358,19 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onAddToCart }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { 
+                id: '1',
                 title: "The Power of Sprouting: Why 48 Hours Matters", 
                 desc: "Discover how sprouting unlocks hidden nutrients and makes grains easier to digest.",
                 image: "https://picsum.photos/seed/blog1/800/600"
               },
               { 
+                id: '2',
                 title: "Ancient Grains for Modern Lifestyles", 
                 desc: "How millets and traditional grains are making a comeback in urban kitchens.",
                 image: "https://picsum.photos/seed/blog2/800/600"
               },
               { 
+                id: '3',
                 title: "Why Small Batch Grinding is Better", 
                 desc: "The difference between mass-produced flour and our stone-ground traditional mixes.",
                 image: "https://picsum.photos/seed/blog3/800/600"
@@ -352,6 +378,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onAddToCart }) => {
             ].map((post, i) => (
               <motion.div 
                 key={i}
+                onClick={() => onNavigate('blog-post', { id: post.id })}
                 whileHover={{ y: -10 }}
                 className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group cursor-pointer"
               >

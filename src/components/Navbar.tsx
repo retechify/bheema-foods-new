@@ -21,13 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, cartCount, onOpenCar
   const navLinks = [
     { name: 'Home', action: () => onNavigate('home') },
     { name: 'Shop', action: () => onNavigate('shop') },
-    { name: 'Blog', action: () => {
-      onNavigate('home');
-      setTimeout(() => {
-        const blogSection = document.querySelector('section:nth-of-type(9)');
-        blogSection?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }},
+    { name: 'Blog', action: () => onNavigate('blog') },
     { name: 'About', action: () => onNavigate('about') },
     { name: 'Contact', action: () => onNavigate('contact') },
   ];

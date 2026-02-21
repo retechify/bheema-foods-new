@@ -8,11 +8,13 @@ import { Cart } from './pages/Cart';
 import { Checkout } from './pages/Checkout';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
+import { Blog } from './pages/Blog';
+import { BlogPost } from './pages/BlogPost';
 import { CartDrawer } from './components/CartDrawer';
 import { CartProvider, useCart } from './context/CartContext';
 import { motion, AnimatePresence } from 'motion/react';
 
-type Page = 'home' | 'shop' | 'product' | 'cart' | 'checkout' | 'about' | 'contact';
+type Page = 'home' | 'shop' | 'product' | 'cart' | 'checkout' | 'about' | 'contact' | 'blog' | 'blog-post';
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -57,6 +59,10 @@ function AppContent() {
         return <About />;
       case 'contact':
         return <Contact />;
+      case 'blog':
+        return <Blog onNavigate={navigate} />;
+      case 'blog-post':
+        return <BlogPost postId={pageParams.id} onNavigate={navigate} />;
       default:
         return <Home onNavigate={navigate} onAddToCart={handleAddToCart} />;
     }

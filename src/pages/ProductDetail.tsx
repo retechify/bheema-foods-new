@@ -15,8 +15,18 @@ import { handleWhatsAppRedirect } from '../utils/whatsapp';
 export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavigate, onAddToCart }) => {
   const [quantity, setQuantity] = useState(1);
   const [openAccordions, setOpenAccordions] = useState<string[]>(['description']);
+  const [selectedWeight, setSelectedWeight] = useState('');
 
   const product = useMemo(() => PRODUCTS.find(p => p.id === productId), [productId]);
+
+  React.useEffect(() => {
+    if (product) {
+      setSelectedWeight(product.weight);
+      setQuantity(1);
+      setOpenAccordions(['description']);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [productId, product]);
 
   if (!product) {
     return (
@@ -32,8 +42,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
       prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
     );
   };
-
-  const [selectedWeight, setSelectedWeight] = useState(product.weight);
 
   const handleWeightChange = (weight: string) => {
     setSelectedWeight(weight);
@@ -55,7 +63,13 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
     handleWhatsAppRedirect([item]);
   };
 
-  const relatedProducts = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+  const relatedProducts = useMemo(() => {
+    const sameCategory = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id);
+    if (sameCategory.length >= 4) return sameCategory.slice(0, 4);
+    
+    const others = PRODUCTS.filter(p => p.category !== product.category && p.id !== product.id);
+    return [...sameCategory, ...others].slice(0, 4);
+  }, [product]);
 
   const trustBadges = [
     { title: 'No Palm Oil', desc: 'Prioritizing your health with every bite.', icon: <Leaf size={32} /> },
@@ -75,7 +89,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
           <span>/</span>
           <button onClick={() => onNavigate('shop')} className="hover:text-brand-green transition-colors">Entire Collection | Bheema Foods</button>
           <span>/</span>
-          <span className="text-brand-green-dark">{product.name}</span>
+          <span className="text-brand-green-dark uppercase">{product.name}</span>
         </div>
 
         {/* Main Product Section */}
@@ -158,7 +172,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
                     { id: 'benefits', title: 'Benefits', content: product.benefit },
                     { id: 'ingredients', title: 'Ingredients', content: product.ingredients.join(', ') },
                     { id: 'nutrition', title: 'Nutrition', content: Object.entries(product.nutrition).map(([k, v]) => `${k}: ${v}`).join(' | ') },
-                    { id: 'howToPrepare', title: 'How to Prepare', content: product.howToPrepare },
                     { id: 'whoShouldConsume', title: 'Who Should Consume', content: product.whoShouldConsume },
                   ].map((item) => (
                     <div key={item.id} className="border-b border-gray-100 last:border-0">
@@ -200,19 +213,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
           </div>
         </div>
 
-        {/* Trust Badges */}
-        <div className="py-16 border-t border-gray-100 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-          {trustBadges.map((badge, i) => (
-            <div key={i} className="text-center space-y-3">
-              <div className="text-brand-green flex justify-center">
-                {badge.icon}
-              </div>
-              <h4 className="text-[11px] font-bold uppercase tracking-widest text-brand-green-dark">{badge.title}</h4>
-              <p className="text-[9px] text-gray-400 leading-tight max-w-[120px] mx-auto">{badge.desc}</p>
-            </div>
-          ))}
-        </div>
-
         {/* Related Products */}
         <div className="py-20 border-t border-gray-100">
           <h2 className="text-3xl font-serif text-brand-green-dark mb-12 text-center italic">You will also like these....</h2>
@@ -226,6 +226,19 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
               />
             ))}
           </div>
+        </div>
+
+        {/* Trust Badges */}
+        <div className="py-16 border-t border-gray-100 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          {trustBadges.map((badge, i) => (
+            <div key={i} className="text-center space-y-3">
+              <div className="text-brand-green flex justify-center">
+                {badge.icon}
+              </div>
+              <h4 className="text-[11px] font-bold uppercase tracking-widest text-brand-green-dark">{badge.title}</h4>
+              <p className="text-[9px] text-gray-400 leading-tight max-w-[120px] mx-auto">{badge.desc}</p>
+            </div>
+          ))}
         </div>
 
         {/* FAQs */}
