@@ -10,6 +10,8 @@ interface ProductDetailProps {
   onAddToCart: (id: string, quantity?: number) => void;
 }
 
+import { handleWhatsAppRedirect } from '../utils/whatsapp';
+
 export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavigate, onAddToCart }) => {
   const [quantity, setQuantity] = useState(1);
   const [openAccordions, setOpenAccordions] = useState<string[]>(['description']);
@@ -29,6 +31,28 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
     setOpenAccordions(prev => 
       prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
     );
+  };
+
+  const [selectedWeight, setSelectedWeight] = useState(product.weight);
+
+  const handleWeightChange = (weight: string) => {
+    setSelectedWeight(weight);
+  };
+
+  const handleAddToCartClick = () => {
+    onAddToCart(product.id, quantity);
+  };
+
+  const handleWhatsAppOrder = () => {
+    const item = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      weight: selectedWeight,
+      quantity: quantity
+    };
+    handleWhatsAppRedirect([item]);
   };
 
   const relatedProducts = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
@@ -58,25 +82,13 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
         <div className="grid lg:grid-cols-2 gap-12 mb-20">
           {/* Image Gallery */}
           <div className="space-y-4">
-            <div className="aspect-[4/5] rounded-lg overflow-hidden bg-[#F9F9F7] border border-gray-100 shadow-sm">
+            <div className="aspect-[4/5] rounded-3xl overflow-hidden bg-[#F9F9F7] border border-gray-100 shadow-sm">
               <img 
                 src={product.image} 
                 alt={product.name} 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
               />
-            </div>
-            <div className="grid grid-cols-6 gap-2">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="aspect-square rounded-md overflow-hidden bg-[#F9F9F7] border border-gray-100 cursor-pointer hover:border-brand-green transition-all">
-                  <img 
-                    src={`https://picsum.photos/seed/thumb${i}/400/400`} 
-                    alt="Thumbnail" 
-                    className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-              ))}
             </div>
           </div>
 
@@ -87,18 +99,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
                 {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">75 reviews</span>
               </div>
-              <h1 className="text-3xl font-serif text-brand-green-dark mb-2 leading-tight">{product.name}</h1>
+              <h1 className="text-4xl font-serif text-brand-green-dark mb-2 leading-tight">{product.name}</h1>
               <div className="flex items-baseline space-x-2 mb-6">
-                <span className="text-xl font-bold text-brand-green-dark">Rs. {product.price}</span>
+                <span className="text-2xl font-bold text-brand-green-dark">₹{product.price}</span>
               </div>
 
               <div className="space-y-6">
                 <div>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2 block">Select Weight</label>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {['185 gms', '72 gms', '5 x 180 gms (Save Rs. 71)', '2kg (+10% Off)', '3kg (+12% Off)'].map((w) => (
+                    {['100g', '300g'].map((w) => (
                       <button 
                         key={w}
-                        className={`px-4 py-2 rounded-md border text-[11px] font-bold transition-all ${w.includes('185 gms') ? 'bg-brand-green-dark text-white border-brand-green-dark' : 'bg-white text-brand-green-dark border-gray-200 hover:border-brand-green'}`}
+                        onClick={() => handleWeightChange(w)}
+                        className={`px-6 py-2 rounded-xl border text-[11px] font-bold transition-all ${selectedWeight === w ? 'bg-brand-green-dark text-white border-brand-green-dark' : 'bg-white text-brand-green-dark border-gray-200 hover:border-brand-green'}`}
                       >
                         {w}
                       </button>
@@ -109,73 +123,50 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Quantity</label>
                   <div className="flex items-center space-x-4">
-                    <div className="flex items-center border border-gray-200 rounded-md">
-                      <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 py-2 text-brand-green-dark hover:bg-gray-50">
+                    <div className="flex items-center bg-brand-beige/30 border border-brand-beige-dark rounded-xl p-1">
+                      <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-2 text-brand-green-dark hover:text-brand-green">
                         <Minus size={14} />
                       </button>
                       <span className="w-8 text-center font-bold text-brand-green-dark text-sm">{quantity}</span>
-                      <button onClick={() => setQuantity(quantity + 1)} className="px-3 py-2 text-brand-green-dark hover:bg-gray-50">
+                      <button onClick={() => setQuantity(quantity + 1)} className="p-2 text-brand-green-dark hover:text-brand-green">
                         <Plus size={14} />
                       </button>
                     </div>
                   </div>
                 </div>
 
-                {/* Offers Section */}
-                <div className="bg-[#FDFDFB] border border-[#E8E8E1] rounded-lg p-4 space-y-4">
-                  <div className="flex items-center space-x-2 text-brand-accent text-[11px] font-bold uppercase tracking-widest">
-                    <Tag size={14} />
-                    <span>February Offers</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    {[
-                      { title: '7% OFF', desc: 'Flat discount for first purchase.', code: 'TASTY' },
-                      { title: 'Free Gift', desc: 'Shop for Rs.999+ and get free gift in cart.', code: 'N/A' },
-                      { title: '10% OFF', desc: 'Shop for Rs.1499+ and get big discount.', code: 'N/A' },
-                    ].map((offer, i) => (
-                      <div key={i} className="space-y-1">
-                        <h5 className="text-[11px] font-bold text-brand-green-dark">{offer.title}</h5>
-                        <p className="text-[9px] text-gray-500 leading-tight">{offer.desc}</p>
-                        <p className="text-[9px] font-bold text-brand-green-dark">Code: {offer.code}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <button 
-                  onClick={() => onAddToCart(product.id, quantity)}
-                  className="w-full bg-[#3D5A35] hover:bg-brand-green-dark text-white py-4 rounded-md font-bold uppercase tracking-[0.2em] text-xs transition-all shadow-md"
-                >
-                  ADD TO CART
-                </button>
-
-                {/* Bundle Banner */}
-                <div className="relative rounded-lg overflow-hidden bg-[#FDFDFB] border border-[#E8E8E1] p-6 flex items-center justify-between group cursor-pointer">
-                  <div className="z-10">
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-brand-green-dark mb-1">BUNDLE UP. SAVE BIG.</h4>
-                    <p className="text-[10px] text-gray-500">Create Your Own Box & Save <span className="font-bold text-brand-green">UPTO 20%</span></p>
-                  </div>
-                  <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 group-hover:opacity-40 transition-opacity">
-                    <img src="https://picsum.photos/seed/bundle-mini/200/200" alt="Bundle" className="w-full h-full object-cover" />
-                  </div>
-                  <ChevronRight size={20} className="text-brand-green-dark z-10" />
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button 
+                    onClick={handleAddToCartClick}
+                    className="flex-grow bg-brand-green hover:bg-brand-green-dark text-white py-4 rounded-xl font-bold uppercase tracking-[0.2em] text-xs transition-all shadow-lg active:scale-95"
+                  >
+                    ADD TO CART
+                  </button>
+                  <button 
+                    onClick={handleWhatsAppOrder}
+                    className="flex items-center justify-center space-x-3 py-4 px-8 rounded-xl border-2 border-[#25D366] text-[#25D366] font-bold uppercase tracking-widest text-xs hover:bg-[#25D366] hover:text-white transition-all"
+                  >
+                    <MessageCircle size={18} />
+                    <span>Order on WhatsApp</span>
+                  </button>
                 </div>
 
                 {/* Accordions */}
                 <div className="border-t border-gray-100 pt-4 space-y-2">
                   {[
                     { id: 'description', title: 'Description', content: product.description },
-                    { id: 'shipping', title: 'Shipping Information', content: 'Free shipping on orders above Rs. 599. Delivery within 3-5 business days across India.' },
+                    { id: 'benefits', title: 'Benefits', content: product.benefit },
+                    { id: 'ingredients', title: 'Ingredients', content: product.ingredients.join(', ') },
+                    { id: 'nutrition', title: 'Nutrition', content: Object.entries(product.nutrition).map(([k, v]) => `${k}: ${v}`).join(' | ') },
+                    { id: 'howToPrepare', title: 'How to Prepare', content: product.howToPrepare },
+                    { id: 'whoShouldConsume', title: 'Who Should Consume', content: product.whoShouldConsume },
                   ].map((item) => (
                     <div key={item.id} className="border-b border-gray-100 last:border-0">
                       <button 
                         onClick={() => toggleAccordion(item.id)}
                         className="w-full py-4 flex items-center justify-between text-xs font-bold uppercase tracking-widest text-brand-green-dark hover:text-brand-green transition-colors"
                       >
-                        <div className="flex items-center space-x-3">
-                          {item.id === 'description' ? <Activity size={16} /> : <Truck size={16} />}
-                          <span>{item.title}</span>
-                        </div>
+                        <span>{item.title}</span>
                         {openAccordions.includes(item.id) ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                       </button>
                       <AnimatePresence>
@@ -213,7 +204,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
         <div className="py-16 border-t border-gray-100 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
           {trustBadges.map((badge, i) => (
             <div key={i} className="text-center space-y-3">
-              <div className="text-brand-green-dark flex justify-center">
+              <div className="text-brand-green flex justify-center">
                 {badge.icon}
               </div>
               <h4 className="text-[11px] font-bold uppercase tracking-widest text-brand-green-dark">{badge.title}</h4>
@@ -224,7 +215,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
 
         {/* Related Products */}
         <div className="py-20 border-t border-gray-100">
-          <h2 className="text-2xl font-serif text-brand-green-dark mb-12 text-center italic">You will also like these....</h2>
+          <h2 className="text-3xl font-serif text-brand-green-dark mb-12 text-center italic">You will also like these....</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {relatedProducts.map((p) => (
               <ProductCard 
@@ -264,7 +255,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
         {/* Reviews Section */}
         <div className="py-20 border-t border-gray-100">
           <div className="text-center mb-16">
-            <h2 className="text-2xl font-serif text-brand-green-dark mb-8">Customer Reviews</h2>
+            <h2 className="text-3xl font-serif text-brand-green-dark mb-8">Customer Reviews</h2>
             <div className="flex flex-col md:flex-row items-center justify-center gap-12">
               <div className="text-center">
                 <div className="flex items-center justify-center space-x-1 text-brand-accent mb-2">
@@ -288,7 +279,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
                 ))}
               </div>
 
-              <button className="bg-[#3D5A35] text-white px-8 py-3 rounded-md text-[11px] font-bold uppercase tracking-widest hover:bg-brand-green-dark transition-all">
+              <button className="bg-brand-green text-white px-8 py-3 rounded-xl text-[11px] font-bold uppercase tracking-widest hover:bg-brand-green-dark transition-all shadow-md">
                 Write a review
               </button>
             </div>
@@ -308,7 +299,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
                   <span className="text-[10px] text-gray-400">{review.date}</span>
                 </div>
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-[10px] font-bold text-brand-green-dark">
+                  <div className="w-8 h-8 bg-brand-beige rounded-full flex items-center justify-center text-[10px] font-bold text-brand-green-dark">
                     {review.name.charAt(0)}
                   </div>
                   <div>
@@ -317,16 +308,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
                 </div>
                 <h5 className="text-[11px] font-bold text-brand-green-dark mb-2">{review.title}</h5>
                 <p className="text-[11px] text-gray-500 leading-relaxed mb-4">{review.text}</p>
-                <div className="flex items-center space-x-4 text-gray-400">
-                  <button className="flex items-center space-x-1 hover:text-brand-green transition-colors">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" /></svg>
-                    <span className="text-[9px]">0</span>
-                  </button>
-                  <button className="flex items-center space-x-1 hover:text-brand-accent transition-colors">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7-1.38 9a2 2 0 0 0 2 2.3zM17 2h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3" /></svg>
-                    <span className="text-[9px]">0</span>
-                  </button>
-                </div>
               </div>
             ))}
           </div>
@@ -336,17 +317,17 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId, onNavig
       {/* Sticky Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 z-40 lg:hidden flex items-center justify-between shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-md overflow-hidden border border-gray-100">
+          <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100">
             <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
           </div>
           <div>
             <h4 className="text-[10px] font-bold text-brand-green-dark truncate max-w-[120px]">{product.name}</h4>
-            <p className="text-[10px] font-bold text-brand-green">Rs. {product.price}</p>
+            <p className="text-[10px] font-bold text-brand-green">₹{product.price}</p>
           </div>
         </div>
         <button 
-          onClick={() => onAddToCart(product.id, quantity)}
-          className="bg-[#3D5A35] text-white px-6 py-3 rounded-md text-[10px] font-bold uppercase tracking-widest"
+          onClick={handleAddToCartClick}
+          className="bg-brand-green text-white px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-md"
         >
           ADD TO CART
         </button>

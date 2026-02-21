@@ -48,6 +48,7 @@ export const CATEGORIES: Category[] = [
 export const PRODUCTS: Product[] = [
   {
     id: '36-multigrain',
+    slug: '36-multigrain-mix',
     name: '36 Multigrain Nutritional Mix',
     price: 450,
     originalPrice: 500,
@@ -61,10 +62,12 @@ export const PRODUCTS: Product[] = [
     nutrition: { 'Energy': '380 kcal', 'Protein': '14g', 'Fiber': '8g', 'Iron': '4.2mg' },
     howToPrepare: 'Mix 2 tablespoons with water or milk. Cook on medium flame for 5-7 mins until thick. Add jaggery or salt to taste.',
     whoShouldConsume: 'Suitable for all ages from 2 years to elders.',
-    allergyDisclaimer: 'Contains nuts (Almonds, Walnuts).'
+    allergyDisclaimer: 'Contains nuts (Almonds, Walnuts).',
+    isFeatured: true
   },
   {
     id: 'sprouted-millet',
+    slug: 'sprouted-millet-mix',
     name: 'Sprouted Millet Mix',
     price: 320,
     weight: '300g',
@@ -77,10 +80,12 @@ export const PRODUCTS: Product[] = [
     nutrition: { 'Energy': '365 kcal', 'Protein': '11g', 'Calcium': '340mg' },
     howToPrepare: 'Add to boiling water and stir continuously to avoid lumps.',
     whoShouldConsume: 'Ideal for growing children and nursing mothers.',
-    allergyDisclaimer: 'Gluten-free environment.'
+    allergyDisclaimer: 'Gluten-free environment.',
+    isFeatured: true
   },
   {
     id: 'karuppu-kavuni',
+    slug: 'karuppu-kavuni-mix',
     name: 'Karuppu Kavuni Rice Mix',
     price: 380,
     weight: '300g',
@@ -93,10 +98,12 @@ export const PRODUCTS: Product[] = [
     nutrition: { 'Energy': '350 kcal', 'Antioxidants': 'High', 'Fiber': '10g' },
     howToPrepare: 'Can be made as a sweet porridge or savory kanji.',
     whoShouldConsume: 'Excellent for women\'s hormonal health.',
-    allergyDisclaimer: 'None.'
+    allergyDisclaimer: 'None.',
+    isFeatured: true
   },
   {
     id: 'black-urad-dal',
+    slug: 'black-urad-mix',
     name: 'Black Urad Dal Porridge Mix',
     price: 290,
     weight: '300g',
@@ -113,6 +120,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'moringa-powder',
+    slug: 'moringa-powder',
     name: 'Moringa Leaf Powder',
     price: 180,
     weight: '100g',
@@ -129,6 +137,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'diabetic-mix',
+    slug: 'diabetic-friendly-mix',
     name: 'Diabetic-Friendly Grain Mix',
     price: 420,
     weight: '300g',
@@ -142,6 +151,40 @@ export const PRODUCTS: Product[] = [
     howToPrepare: 'Best consumed as a savory breakfast porridge.',
     whoShouldConsume: 'Specifically for individuals managing blood sugar.',
     allergyDisclaimer: 'Contains Barley (Gluten).'
+  },
+  {
+    id: 'horse-gram-mix',
+    slug: 'horse-gram-mix',
+    name: 'Sprouted Horse Gram Mix',
+    price: 260,
+    weight: '300g',
+    benefit: 'High protein and iron for weight management',
+    category: 'protein',
+    image: 'https://picsum.photos/seed/bheema7/800/800',
+    tags: ['Protein Rich', 'Weight Management'],
+    description: 'Traditional horse gram sprouted and roasted to perfection.',
+    ingredients: ['Sprouted Horse Gram', 'Cumin', 'Pepper'],
+    nutrition: { 'Energy': '320 kcal', 'Protein': '22g', 'Iron': '6.5mg' },
+    howToPrepare: 'Mix with buttermilk or cook as a thick soup.',
+    whoShouldConsume: 'Great for those on a weight loss journey.',
+    allergyDisclaimer: 'None.'
+  },
+  {
+    id: 'curry-leaf-podi',
+    slug: 'curry-leaf-podi',
+    name: 'Curry Leaf Podi',
+    price: 150,
+    weight: '100g',
+    benefit: 'Iron-rich condiment for hair and digestion',
+    category: 'immunity',
+    image: 'https://picsum.photos/seed/bheema8/800/800',
+    tags: ['High Iron', 'Immunity Boost'],
+    description: 'A flavorful blend of roasted curry leaves and traditional spices.',
+    ingredients: ['Curry Leaves', 'Urad Dal', 'Red Chillies', 'Asafoetida'],
+    nutrition: { 'Iron': 'High', 'Fiber': 'Medium' },
+    howToPrepare: 'Mix with hot rice and ghee or use as a side for idli/dosa.',
+    whoShouldConsume: 'Anyone looking to improve iron intake naturally.',
+    allergyDisclaimer: 'None.'
   }
 ];
 

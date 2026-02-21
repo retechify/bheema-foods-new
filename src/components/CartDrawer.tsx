@@ -1,26 +1,30 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
-import { CartItem } from '../types';
+import { useCart } from '../context/CartContext';
 
 interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  items: CartItem[];
-  onUpdateQuantity: (productId: string, delta: number) => void;
-  onRemoveItem: (productId: string) => void;
-  onCheckout: () => void;
+  onNavigate: (page: string) => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
   isOpen,
   onClose,
-  items,
-  onUpdateQuantity,
-  onRemoveItem,
-  onCheckout
+  onNavigate
 }) => {
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const { cartItems, updateQuantity, removeFromCart, cartTotal, cartCount } = useCart();
+
+  const handleCheckout = () => {
+    onClose();
+    onNavigate('checkout');
+  };
+
+  const handleViewCart = () => {
+    onClose();
+    onNavigate('cart');
+  };
 
   return (
     <AnimatePresence>
@@ -49,7 +53,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <ShoppingBag className="text-brand-green" size={24} />
                 <h2 className="text-xl font-serif font-bold text-brand-green-dark">Your Cart</h2>
                 <span className="bg-brand-green text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                  {items.reduce((sum, item) => sum + item.quantity, 0)}
+                  {cartCount}
                 </span>
               </div>
               <button 
@@ -62,7 +66,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
             {/* Items List */}
             <div className="flex-grow overflow-y-auto p-6 space-y-6">
-              {items.length === 0 ? (
+              {cartItems.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center">
                   <div className="w-20 h-20 bg-brand-beige rounded-full flex items-center justify-center mb-6 text-brand-green-light">
                     <ShoppingBag size={40} />
@@ -77,7 +81,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   </button>
                 </div>
               ) : (
-                items.map((item) => (
+                cartItems.map((item) => (
                   <div key={item.id} className="flex space-x-4 group">
                     <div className="w-24 h-24 rounded-2xl overflow-hidden bg-brand-beige flex-shrink-0 border border-brand-beige-dark">
                       <img 
@@ -90,7 +94,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       <div className="flex justify-between items-start mb-1">
                         <h4 className="font-bold text-brand-green-dark leading-tight">{item.name}</h4>
                         <button 
-                          onClick={() => onRemoveItem(item.id)}
+                          onClick={() => removeFromCart(item.id)}
                           className="text-brand-green-light hover:text-brand-accent transition-colors"
                         >
                           <Trash2 size={16} />
@@ -100,7 +104,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center border border-brand-beige-dark rounded-full px-2 py-1">
                           <button 
-                            onClick={() => onUpdateQuantity(item.id, -1)}
+                            onClick={() => updateQuantity(item.id, -1)}
                             className="p-1 text-brand-green-dark hover:text-brand-green disabled:opacity-30"
                             disabled={item.quantity <= 1}
                           >
@@ -108,7 +112,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           </button>
                           <span className="w-8 text-center text-sm font-bold text-brand-green-dark">{item.quantity}</span>
                           <button 
-                            onClick={() => onUpdateQuantity(item.id, 1)}
+                            onClick={() => updateQuantity(item.id, 1)}
                             className="p-1 text-brand-green-dark hover:text-brand-green"
                           >
                             <Plus size={14} />
@@ -123,12 +127,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             </div>
 
             {/* Footer */}
-            {items.length > 0 && (
+            {cartItems.length > 0 && (
               <div className="p-6 border-t border-brand-beige bg-brand-beige/10">
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-brand-green-light">
                     <span>Subtotal</span>
-                    <span>₹{subtotal}</span>
+                    <span>₹{cartTotal}</span>
                   </div>
                   <div className="flex justify-between text-brand-green-light">
                     <span>Shipping</span>
@@ -136,16 +140,24 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   </div>
                   <div className="flex justify-between text-xl font-serif font-bold text-brand-green-dark pt-3 border-t border-brand-beige">
                     <span>Total</span>
-                    <span>₹{subtotal}</span>
+                    <span>₹{cartTotal}</span>
                   </div>
                 </div>
-                <button 
-                  onClick={onCheckout}
-                  className="btn-primary w-full flex items-center justify-center space-x-3 py-4"
-                >
-                  <span>Proceed to Checkout</span>
-                  <ArrowRight size={20} />
-                </button>
+                <div className="grid grid-cols-2 gap-4">
+                  <button 
+                    onClick={handleViewCart}
+                    className="btn-secondary py-4"
+                  >
+                    View Cart
+                  </button>
+                  <button 
+                    onClick={handleCheckout}
+                    className="btn-primary flex items-center justify-center space-x-3 py-4"
+                  >
+                    <span>Checkout</span>
+                    <ArrowRight size={20} />
+                  </button>
+                </div>
                 <p className="text-center text-[10px] text-brand-green-light mt-4 uppercase tracking-widest font-bold">
                   Secure Checkout • FSSAI Certified • Fresh Weekly
                 </p>

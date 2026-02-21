@@ -10,63 +10,67 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onView, onAddToCart }) => {
   const [quantity, setQuantity] = React.useState(1);
+  const [selectedWeight, setSelectedWeight] = React.useState(product.weight);
 
   return (
-    <div className="bg-white rounded-lg group border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col">
-      <div className="relative aspect-square overflow-hidden bg-[#F9F9F7] rounded-t-lg">
+    <div className="bg-white rounded-3xl group border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col overflow-hidden">
+      <div className="relative aspect-square overflow-hidden bg-brand-beige/30">
         <img 
           src={product.image} 
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           referrerPolicy="no-referrer"
         />
         {product.originalPrice && (
-          <div className="absolute top-3 left-3 bg-brand-accent text-white text-[9px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider">
+          <div className="absolute top-4 left-4 bg-brand-accent text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">
             Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
           </div>
         )}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 space-x-3">
+        <div className="absolute inset-0 bg-brand-green-dark/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
           <button 
             onClick={() => onView(product.id)}
-            className="bg-white p-3 rounded-full text-brand-green-dark hover:bg-brand-green hover:text-white transition-all shadow-lg"
+            className="bg-white p-4 rounded-full text-brand-green-dark hover:scale-110 transition-transform shadow-xl"
           >
-            <Eye size={18} />
+            <Eye size={20} />
           </button>
         </div>
       </div>
-      <div className="p-4 flex flex-col flex-grow">
-        <div className="flex items-center space-x-0.5 text-brand-accent mb-2">
-          {[...Array(5)].map((_, i) => <Star key={i} size={10} fill="currentColor" />)}
-          <span className="text-[9px] text-gray-400 ml-1">(45)</span>
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="flex items-center space-x-1 text-brand-accent mb-3">
+          {[...Array(5)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
+          <span className="text-[10px] text-gray-400 font-bold ml-2 uppercase tracking-widest">4.8</span>
         </div>
-        <h3 className="text-sm font-serif font-bold text-brand-green-dark leading-tight group-hover:text-brand-green transition-colors mb-1">
+        <h3 className="text-lg font-serif font-bold text-brand-green-dark leading-tight group-hover:text-brand-green transition-colors mb-2">
           {product.name}
         </h3>
-        <p className="text-[10px] text-gray-400 font-medium mb-3">Rs. {product.price}</p>
+        <p className="text-brand-green font-bold mb-4">₹{product.price}</p>
         
-        <div className="mt-auto space-y-3">
+        <div className="mt-auto space-y-4">
           <div className="relative">
-            <select className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 px-3 text-[10px] font-bold text-brand-green-dark focus:outline-none cursor-pointer">
-              <option>{product.weight}</option>
-              <option>500g</option>
-              <option>1kg</option>
+            <select 
+              value={selectedWeight}
+              onChange={(e) => setSelectedWeight(e.target.value)}
+              className="w-full appearance-none bg-brand-beige/20 border border-brand-beige-dark rounded-xl py-3 px-4 text-[11px] font-bold text-brand-green-dark focus:outline-none cursor-pointer"
+            >
+              <option value="100g">100g Pack</option>
+              <option value="300g">300g Pack</option>
             </select>
-            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-green pointer-events-none" />
           </div>
 
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center border border-gray-200 rounded-md">
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-2 py-1 text-brand-green-dark hover:bg-gray-50">
-                <Minus size={12} />
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center bg-brand-beige/30 rounded-xl p-1 border border-brand-beige-dark">
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-2 text-brand-green-dark hover:text-brand-green transition-colors">
+                <Minus size={14} />
               </button>
-              <span className="w-6 text-center font-bold text-brand-green-dark text-[10px]">{quantity}</span>
-              <button onClick={() => setQuantity(quantity + 1)} className="px-2 py-1 text-brand-green-dark hover:bg-gray-50">
-                <Plus size={12} />
+              <span className="w-6 text-center font-bold text-brand-green-dark text-xs">{quantity}</span>
+              <button onClick={() => setQuantity(quantity + 1)} className="p-2 text-brand-green-dark hover:text-brand-green transition-colors">
+                <Plus size={14} />
               </button>
             </div>
             <button 
               onClick={() => onAddToCart(product.id, quantity)}
-              className="flex-grow py-2 text-[10px] font-bold uppercase tracking-widest bg-[#E8E8E1] text-brand-green-dark rounded-md hover:bg-brand-green hover:text-white transition-all"
+              className="flex-grow py-3 text-[11px] font-bold uppercase tracking-widest bg-brand-green text-white rounded-xl hover:bg-brand-green-dark transition-all shadow-md active:scale-95"
             >
               Add to cart
             </button>

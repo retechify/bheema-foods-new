@@ -1,5 +1,6 @@
 export interface Product {
   id: string;
+  slug: string;
   name: string;
   price: number;
   originalPrice?: number;
@@ -14,6 +15,8 @@ export interface Product {
   howToPrepare: string;
   whoShouldConsume: string;
   allergyDisclaimer: string;
+  isFeatured?: boolean;
+  isBundle?: boolean;
 }
 
 export interface Category {

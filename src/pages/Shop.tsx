@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { PRODUCTS, CATEGORIES } from '../constants';
 import { ProductCard } from '../components/ProductCard';
-import { Filter, X, ChevronDown, Search } from 'lucide-react';
+import { Filter, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface ShopProps {
@@ -12,50 +12,56 @@ interface ShopProps {
 
 export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCategory }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
+  
+  React.useEffect(() => {
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+    }
+  }, [initialCategory]);
   const [selectedBenefit, setSelectedBenefit] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const benefits = [
     'High Iron', 'Diabetic Friendly', 'Bone Strength', 'Protein Rich', 'Immunity Boost', 'Weight Management'
   ];
 
+  const [sortBy, setSortBy] = useState('featured');
+
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter(p => {
+    let result = PRODUCTS.filter(p => {
       const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
       const matchesBenefit = selectedBenefit === 'all' || p.tags.includes(selectedBenefit);
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           p.benefit.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesBenefit && matchesSearch;
+      return matchesCategory && matchesBenefit;
     });
-  }, [selectedCategory, selectedBenefit, searchQuery]);
+
+    if (sortBy === 'low-high') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'high-low') {
+      result.sort((a, b) => b.price - a.price);
+    }
+
+    return result;
+  }, [selectedCategory, selectedBenefit, sortBy]);
 
   return (
     <div className="pt-32 pb-24 bg-white min-h-screen">
       <div className="container-custom">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-serif text-brand-green-dark mb-4">Entire Collection</h1>
+          <h1 className="text-4xl font-serif text-brand-green-dark mb-4">
+            {selectedCategory === 'all' ? 'Entire Collection' : CATEGORIES.find(c => c.id === selectedCategory)?.name}
+          </h1>
           <div className="flex items-center justify-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
             <button onClick={() => onNavigate('home')} className="hover:text-brand-green">Home</button>
             <span>/</span>
-            <span className="text-brand-green-dark">Entire Collection | Bheema Foods</span>
+            <span className="text-brand-green-dark">
+              {selectedCategory === 'all' ? 'Entire Collection' : CATEGORIES.find(c => c.id === selectedCategory)?.name} | Bheema Foods
+            </span>
           </div>
         </div>
 
-        {/* Filters & Search Bar */}
-        <div className="flex flex-col lg:flex-row gap-4 mb-12">
-          <div className="relative flex-grow">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search products..." 
-              className="w-full pl-12 pr-4 py-3 bg-white rounded-md border border-gray-200 focus:outline-none focus:border-brand-green text-sm"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          
+        {/* Filters */}
+        <div className="flex flex-col lg:flex-row justify-end gap-4 mb-12">
           <div className="flex gap-2">
             <button 
               onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -66,10 +72,14 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
             </button>
             
             <div className="relative">
-              <select className="appearance-none bg-white px-6 py-3 pr-10 rounded-md border border-gray-200 font-bold text-[11px] uppercase tracking-widest text-brand-green-dark focus:outline-none cursor-pointer">
-                <option>Featured</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
+              <select 
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="appearance-none bg-white px-6 py-3 pr-10 rounded-md border border-gray-200 font-bold text-[11px] uppercase tracking-widest text-brand-green-dark focus:outline-none cursor-pointer"
+              >
+                <option value="featured">Featured</option>
+                <option value="low-high">Price: Low to High</option>
+                <option value="high-low">Price: High to Low</option>
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
             </div>
@@ -147,15 +157,14 @@ export const Shop: React.FC<ShopProps> = ({ onNavigate, onAddToCart, initialCate
         ) : (
           <div className="text-center py-24 bg-gray-50 rounded-lg border border-gray-100">
             <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300 shadow-sm">
-              <Search size={32} />
+              <Filter size={32} />
             </div>
             <h3 className="text-xl font-serif text-brand-green-dark mb-2">No products found</h3>
-            <p className="text-sm text-gray-400 mb-8">Try adjusting your filters or search query.</p>
+            <p className="text-sm text-gray-400 mb-8">Try adjusting your filters.</p>
             <button 
               onClick={() => {
                 setSelectedCategory('all');
                 setSelectedBenefit('all');
-                setSearchQuery('');
               }}
               className="bg-brand-green-dark text-white px-8 py-3 rounded-md text-[11px] font-bold uppercase tracking-widest"
             >

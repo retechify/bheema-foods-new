@@ -1,7 +1,7 @@
 import React from 'react';
 import { CATEGORIES, PRODUCTS, BUNDLES, TESTIMONIALS, FAQS } from '../constants';
 import { ProductCard } from '../components/ProductCard';
-import { CheckCircle2, ArrowRight, Star, Quote, ChevronRight, Baby, Heart, Activity, Shield, Zap, Leaf, X, ChevronDown } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Star, Quote, ChevronRight, Baby, Heart, Activity, Shield, Zap, Leaf, X, ChevronDown, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface HomeProps {
@@ -186,29 +186,30 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onAddToCart }) => {
         </div>
       </section>
 
-      {/* Section 5: Why Choose Bheema Foods */}
+      {/* Section 5: Social Gallery */}
       <section className="py-24 bg-white">
         <div className="container-custom">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-serif text-brand-green-dark mb-4">The Bheema Promise</h2>
-            <p className="text-brand-green-light">Why families trust us for their daily nutrition.</p>
+            <h2 className="text-4xl font-serif text-brand-green-dark mb-4">Join Our Community</h2>
+            <p className="text-brand-green-light">Follow us @bheemafoods for daily inspiration and traditional wisdom.</p>
           </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {[
-              { title: 'Sprouted Nutrition', icon: <Zap /> },
-              { title: 'No Maltodextrin', icon: <X /> },
-              { title: 'No Refined Sugar', icon: <X /> },
-              { title: 'Freshly Ground', icon: <Activity /> },
-              { title: 'Trusted by Families', icon: <Heart /> },
-              { title: 'Small Batch', icon: <Leaf /> },
-            ].map((item, i) => (
-              <div key={i} className="text-center">
-                <div className="w-16 h-16 bg-brand-beige rounded-2xl flex items-center justify-center text-brand-green mx-auto mb-4">
-                  {item.icon}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ scale: 1.02 }}
+                className="aspect-square rounded-2xl overflow-hidden bg-brand-beige relative group cursor-pointer"
+              >
+                <img 
+                  src={`https://picsum.photos/seed/social${i}/600/600`} 
+                  alt={`Social ${i}`} 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-brand-green-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Instagram className="text-white" size={24} />
                 </div>
-                <h4 className="text-sm font-bold text-brand-green-dark uppercase tracking-wider">{item.title}</h4>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -311,13 +312,73 @@ export const Home: React.FC<HomeProps> = ({ onNavigate, onAddToCart }) => {
               <p className="text-brand-green-dark/80 text-lg mb-8 leading-relaxed">
                 Today, we maintain those same traditional methods—sprouting for 48 hours, slow roasting, and small-batch grinding—to bring that same motherly care to your family's table.
               </p>
-              <button className="btn-secondary">Read Our Full Story</button>
+              <button onClick={() => onNavigate('about')} className="btn-secondary">Read Our Full Story</button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 9: FAQ Section */}
+      {/* Section 9: From the Blog */}
+      <section className="py-24 bg-brand-beige">
+        <div className="container-custom">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <h2 className="text-4xl font-serif text-brand-green-dark mb-4">Traditional Wisdom</h2>
+              <p className="text-brand-green-light">Insights into ancient nutrition and modern wellness.</p>
+            </div>
+            <button className="text-brand-green font-bold uppercase tracking-widest flex items-center space-x-2 hover:text-brand-green-dark transition-colors">
+              <span>Read All Articles</span>
+              <ArrowRight size={18} />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { 
+                title: "The Power of Sprouting: Why 48 Hours Matters", 
+                desc: "Discover how sprouting unlocks hidden nutrients and makes grains easier to digest.",
+                image: "https://picsum.photos/seed/blog1/800/600"
+              },
+              { 
+                title: "Ancient Grains for Modern Lifestyles", 
+                desc: "How millets and traditional grains are making a comeback in urban kitchens.",
+                image: "https://picsum.photos/seed/blog2/800/600"
+              },
+              { 
+                title: "Why Small Batch Grinding is Better", 
+                desc: "The difference between mass-produced flour and our stone-ground traditional mixes.",
+                image: "https://picsum.photos/seed/blog3/800/600"
+              }
+            ].map((post, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ y: -10 }}
+                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group cursor-pointer"
+              >
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={post.image} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="p-8">
+                  <div className="text-[10px] font-bold text-brand-accent uppercase tracking-widest mb-3">Nutrition • 5 min read</div>
+                  <h3 className="text-xl font-serif text-brand-green-dark mb-4 group-hover:text-brand-green transition-colors">{post.title}</h3>
+                  <p className="text-sm text-brand-green-light mb-6 line-clamp-2">{post.desc}</p>
+                  <span className="text-brand-green font-bold text-xs uppercase tracking-widest flex items-center space-x-2">
+                    <span>Read More</span>
+                    <ChevronRight size={14} />
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 10: FAQ Section */}
       <section className="py-24 bg-white">
         <div className="container-custom max-w-3xl">
           <div className="text-center mb-16">

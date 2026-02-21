@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Menu, X, Search, User, ChevronDown } from 'lucide-react';
+import { ShoppingBag, Menu, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface NavbarProps {
@@ -20,12 +20,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, cartCount, onOpenCar
 
   const navLinks = [
     { name: 'Home', action: () => onNavigate('home') },
-    { name: 'All Products', action: () => onNavigate('shop') },
-    { name: 'Crazy Deals', action: () => onNavigate('shop') },
-    { name: 'Our Story', action: () => onNavigate('home') },
-    { name: 'Blog', action: () => onNavigate('home') },
-    { name: 'Contact', action: () => onNavigate('home') },
-    { name: 'Track Order', action: () => onNavigate('home') },
+    { name: 'Shop', action: () => onNavigate('shop') },
+    { name: 'Blog', action: () => {
+      onNavigate('home');
+      setTimeout(() => {
+        const blogSection = document.querySelector('section:nth-of-type(9)');
+        blogSection?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }},
+    { name: 'About', action: () => onNavigate('about') },
+    { name: 'Contact', action: () => onNavigate('contact') },
   ];
 
   return (
@@ -54,12 +58,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, cartCount, onOpenCar
 
         {/* Icons */}
         <div className="flex items-center space-x-3">
-          <button className="p-2 text-gray-600 hover:text-brand-green transition-colors">
-            <Search size={18} />
-          </button>
-          <button className="p-2 text-gray-600 hover:text-brand-green transition-colors hidden sm:block">
-            <User size={18} />
-          </button>
           <button 
             className="p-2 text-gray-600 hover:text-brand-green transition-colors relative"
             onClick={onOpenCart}
